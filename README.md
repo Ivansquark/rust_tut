@@ -1,1 +1,1 @@
-# rust tutorial
+# rust tutorial embedded and desktop
