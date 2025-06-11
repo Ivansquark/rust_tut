@@ -1,0 +1,45 @@
+#! /bin/bash
+#
+function_to_fork1() {
+    sleep 0.5
+    echo "+---------------------------------------------------+"
+    echo "|                  ***   GDB  ***                   |"
+    echo "+---------------------------------------------------+"
+    gdb-multiarch
+    echo "+---------------------------------------------------+"
+    echo "|              *** END   GDB  ***                   |"
+    echo "+---------------------------------------------------+"
+    #killall -9 openocd
+}
+
+# ... execution continues in parent process ..
+
+function_to_fork2() {
+    echo "+---------------------------------------------------+"
+    echo "|              ***  OPENOCD   ***                   |"
+    echo "+---------------------------------------------------+"
+    "openocd" "-c" "gdb_port 3333" \
+    "-s" "/usr/share/openocd/scripts" "-f" "./lib/stlink.cfg" \
+    "-f" "./lib/stm32f4x.cfg"
+    echo "+---------------------------------------------------+"
+    echo "|         ***  OPENOCD  CLOSED ***                  |"
+    echo "+---------------------------------------------------+"
+
+}
+
+function_to_fork2 &
+sleep 0.1
+#pidOpenOCD=$!
+function_to_fork1 
+
+sleep 0.5  # Даем OpenOCD время на запуск
+
+killall -9 openocd
+while [ $? -ne 0 ]; do killall openocd; done;
+#if [ $? -ne 0 ]; then sleep 1; killall openocd; fi;
+echo "+---------------------------------------------------+"
+echo "|         ***  OPENOCD  KILLED ***                  |"
+echo "+---------------------------------------------------+"
+sleep 0.1
+
+# not always close openocd

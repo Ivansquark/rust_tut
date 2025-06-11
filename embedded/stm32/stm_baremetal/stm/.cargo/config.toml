@@ -1,0 +1,11 @@
+[build]
+target = "thumbv7em-none-eabihf"
+
+[target.thumbv7em-none-eabihf]
+#runner = "probe-rs run --chip STMSTM32F407VG"  # Опционально для отладки
+rustflags = [
+    "-C", "link-arg=-Tmemory.x",
+    "-C", "link-arg=--Map=build/main.map",
+    "-C", "link-arg=--gc-sections",
+    "-C", "link-arg=-nostdlib",
+]
