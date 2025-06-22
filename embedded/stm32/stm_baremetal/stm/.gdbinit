@@ -1,6 +1,6 @@
 directory src
 target remote :3333
-file main.elf
+file build/main.elf
 #source lib/gdb-svd.py
 #svd lib/CH32V003xx.svd
 monitor reset halt
